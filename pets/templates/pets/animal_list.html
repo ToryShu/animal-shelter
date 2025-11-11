@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Animal Shelter — Animals</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CDN for quick, decent styling -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <nav class="navbar navbar-expand-lg navbar-white bg-white border-bottom mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="/">Animal Shelter</a>
+      <div>
+        <a class="btn btn-outline-primary btn-sm" href="/admin/">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 class="mb-4">Available Animals</h1>
+
+    {% if animals %}
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for a in animals %}
+          <div class="col">
+            <div class="card h-100 shadow-sm">
+              {% if a.photo %}
+                <img src="{{ a.photo.url }}" class="card-img-top" alt="{{ a.name }}" style="object-fit:cover; height:220px;">
+              {% else %}
+                <!-- Placeholder image if none uploaded yet -->
+                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height:220px;">
+                  <span>No image</span>
+                </div>
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title">{{ a.name }} {% if a.adopted %}<span class="badge bg-danger">Adopted</span>{% endif %}</h5>
+                <p class="card-text text-capitalize"><strong>Species:</strong> {{ a.get_species_display }}</p>
+                {% if a.age %}
+                  <p class="card-text"><strong>Age:</strong> {{ a.age }} years</p>
+                {% endif %}
+                <p class="card-text text-truncate">{{ a.description }}</p>
+              </div>
+              <div class="card-footer bg-white">
+                <a href="{% url 'pets:animal_detail' a.pk %}" class="btn btn-primary btn-sm">View</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No animals have been added yet. Add some in the admin panel.</p>
+    {% endif %}
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

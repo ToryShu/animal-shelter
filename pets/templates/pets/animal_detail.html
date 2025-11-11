@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ animal.name }} — Animal Shelter</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <a href="{% url 'pets:animal_list' %}" class="btn btn-link mb-3">&larr; Back to animals</a>
+
+    <div class="card mb-4">
+      <div class="row g-0">
+        <div class="col-md-5">
+          {% if animal.photo %}
+            <img src="{{ animal.photo.url }}" class="img-fluid rounded-start" alt="{{ animal.name }}" style="object-fit:cover; height:100%;">
+          {% else %}
+            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height:100%; min-height:300px;">
+              <span>No image</span>
+            </div>
+          {% endif %}
+        </div>
+        <div class="col-md-7">
+          <div class="card-body">
+            <h2 class="card-title">{{ animal.name }} {% if animal.adopted %}<span class="badge bg-danger">Adopted</span>{% endif %}</h2>
+            <p class="card-text"><strong>Species:</strong> {{ animal.get_species_display }}</p>
+            {% if animal.age %}<p><strong>Age:</strong> {{ animal.age }} years</p>{% endif %}
+            <p class="card-text">{{ animal.description }}</p>
+            {% if user.is_authenticated %}
+                {% if not animal.adopted %}
+                    <a href="{% url 'pets:adopt_animal' animal.pk %}" class="btn btn-success mt-3">Adopt this animal</a>
+                {% else %}
+                    <p class="text-muted mt-3">This animal has already been adopted.</p>
+                {% endif %}
+            {% else %}
+                <p class="mt-3">
+                    <a href="{% url 'pets:login' %}?next={{ request.path }}" class="btn btn-outline-primary">Log in to adopt</a>
+                    or
+                    <a href="{% url 'pets:register' %}" class="btn btn-outline-secondary">Register</a>
+                </p>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a href="/admin/" class="btn btn-outline-secondary">Admin</a>
+  </div>
+</body>
+</html>
