@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Animals</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 20px; }
+        .header h1 { font-size: 24px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .btn { display: inline-block; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 5px; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-secondary { background: #95a5a6; color: white; }
+        .btn:hover { opacity: 0.9; }
+        .messages { margin: 20px 0; }
+        .alert { padding: 15px; border-radius: 5px; margin-bottom: 10px; }
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-error { background: #f8d7da; color: #721c24; }
+        table { width: 100%; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #34495e; color: white; }
+        tr:hover { background: #f8f9fa; }
+        img { max-width: 50px; border-radius: 5px; }
+        .badge { padding: 5px 10px; border-radius: 3px; font-size: 12px; }
+        .badge-success { background: #27ae60; color: white; }
+        .badge-warning { background: #f39c12; color: white; }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>🐾 Manage Animals</h1>
+        </div>
+    </div>
+    
+    <div class="container">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div style="margin: 20px 0;">
+            <a href="{% url 'pets:admin_animal_create' %}" class="btn btn-success">➕ Add New Animal</a>
+            <a href="{% url 'pets:admin_dashboard' %}" class="btn btn-secondary">⬅️ Back to Dashboard</a>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Name</th>
+                    <th>Species</th>
+                    <th>Age</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for animal in animals %}
+                <tr>
+                    <td>
+                        {% if animal.photo %}
+                        <img src="{{ animal.photo.url }}" alt="{{ animal.name }}">
+                        {% else %}
+                        No photo
+                        {% endif %}
+                    </td>
+                    <td>{{ animal.name }}</td>
+                    <td>{{ animal.get_species_display }}</td>
+                    <td>{{ animal.age|default:"Unknown" }}</td>
+                    <td>
+                        {% if animal.adopted %}
+                        <span class="badge badge-success">Adopted</span>
+                        {% else %}
+                        <span class="badge badge-warning">Available</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'pets:admin_animal_edit' animal.pk %}" class="btn btn-primary">✏️ Edit</a>
+                        <a href="{% url 'pets:admin_animal_delete' animal.pk %}" class="btn btn-danger">🗑️ Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 40px;">No animals yet. Add your first animal!</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+

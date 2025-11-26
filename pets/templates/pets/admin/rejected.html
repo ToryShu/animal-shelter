@@ -1,0 +1,19 @@
+{% load static %}
+
+{% block content %}
+<div class="max-w-lg mx-auto text-center p-6 bg-white rounded shadow">
+  <h2 class="text-3xl font-bold text-red-600 mb-4">Adoption Rejected</h2>
+
+  {% if animal.species == "cat" %}
+    <img src="{% static 'pets/images/sad_cat.gif' %}" alt="Sad cat" class="w-64 mx-auto rounded-lg shadow mb-4">
+  {% else %}
+    <img src="{% static 'pets/images/sad_dog.gif' %}" alt="Sad dog" class="w-64 mx-auto rounded-lg shadow mb-4">
+  {% endif %}
+
+  <p class="text-lg mb-4">Poor <strong>{{ animal.name }}</strong>... still waiting for a home.</p>
+
+  <a href="{% url 'pets:admin_adoption_requests' %}" class="inline-block bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded">
+    Back to Requests
+  </a>
+</div>
+{% endblock %}

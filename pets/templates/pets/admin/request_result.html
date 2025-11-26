@@ -1,0 +1,29 @@
+{% load static %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem;">
+
+
+    <!-- Заголовок -->
+    <h2 class="text-3xl font-bold {% if status == 'approved' %}text-green-600{% else %}text-red-600{% endif %} mb-4">
+        Adoption {{ status|title }}!
+    </h2>
+
+    <!-- GIF -->
+    <div class="tenor-gif-embed mb-4" data-postid="{{ gif_url_postid }}" data-share-method="host" data-aspect-ratio="1" data-width="300px">
+        <a href="{{ gif_url }}">GIF</a> from <a href="https://tenor.com/search/{{ animal.species|lower }}+gif">GIFs</a>
+    </div>
+    <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+
+    <!-- Описание -->
+    <p class="text-xl font-semibold">
+        {{ animal.name }} has {{ status }}!
+    </p>
+
+    <!-- Кнопка назад -->
+    <a href="{% url 'pets:admin_adoption_requests' %}"
+       class="inline-block mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+        Back to Requests
+    </a>
+</div>
+{% endblock %}

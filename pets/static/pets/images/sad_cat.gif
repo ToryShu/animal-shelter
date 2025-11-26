@@ -1,0 +1,2 @@
+{% load static %}
+<img src="{% static 'pets/images/happy_cat.gif' %}" class="w-64 mx-auto rounded-xl shadow">

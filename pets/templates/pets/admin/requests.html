@@ -1,0 +1,54 @@
+{% load static %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+
+    <h2 class="text-2xl font-semibold mb-4">Adoption Requests</h2>
+
+    {% if adoption_requests %}
+        <table class="w-full border border-gray-300 rounded overflow-hidden">
+            <thead class="bg-gray-100">
+                <tr class="text-left">
+                    <th class="px-4 py-2 border">Animal</th>
+                    <th class="px-4 py-2 border">User</th>
+                    <th class="px-4 py-2 border">Status</th>
+                    <th class="px-4 py-2 border">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for request in adoption_requests %}
+                <tr class="border hover:bg-gray-50 transition">
+                    <td class="px-4 py-2 border">{{ request.animal.name }}</td>
+                    <td class="px-4 py-2 border">{{ request.user.username }}</td>
+
+                    <td class="px-4 py-2 border">
+                        {% if request.status == 'approved' %}
+                            <span class="text-green-600 font-bold">Approved</span>
+                        {% elif request.status == 'rejected' %}
+                            <span class="text-red-600 font-bold">Rejected</span>
+                        {% else %}
+                            <span class="text-yellow-600 font-bold">Pending</span>
+                        {% endif %}
+                    </td>
+
+                    <td class="px-4 py-2 border space-x-2">
+                      <a href="{% url 'pets:admin_request_approve' request.id %}" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">Approve</a>
+                      <a href="{% url 'pets:admin_request_reject' request.id %}" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">Reject</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+        <p class="text-gray-600">No adoption requests yet.</p>
+    {% endif %}
+
+    <a href="{% url 'pets:admin_dashboard' %}"
+       class="inline-block mt-4 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded">
+       Back to Dashboard
+    </a>
+
+</div>
+{% endblock %}

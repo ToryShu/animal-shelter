@@ -1,0 +1,140 @@
+
+{% block content %}
+<div class="bg-white shadow-lg rounded-xl p-6">
+    <h2 class="text-2xl font-bold mb-4">Adoption Requests</h2>
+
+    {% if adoption_requests %}
+        <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 border">Animal</th>
+                    <th class="px-4 py-2 border">User</th>
+                    <th class="px-4 py-2 border">Status</th>
+                    <th class="px-4 py-2 border">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in adoption_requests %}
+                <tr class="text-center hover:bg-gray-50 transition">
+                    <td class="px-4 py-2 border">{{ request.animal.name }}</td>
+                    <td class="px-4 py-2 border">{{ request.user.username }}</td>
+                    <td class="px-4 py-2 border font-semibold">
+                        {% if request.status == 'approved' %}
+                            <span class="text-green-600">{{ request.status }}</span>
+                        {% elif request.status == 'rejected' %}
+                            <span class="text-red-600">{{ request.status }}</span>
+                        {% else %}
+                            <span class="text-yellow-600">{{ request.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2 border space-x-2">
+                        {% if request.status == 'pending' %}
+                            <a href="{% url 'pets:admin_request_approve' request.id %}"
+                               class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg shadow-sm text-sm">
+                                Approve
+                            </a>
+                            <a href="{% url 'pets:admin_request_reject' request.id %}"
+                               class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow-sm text-sm">
+                                Reject
+                            </a>
+                        {% else %}
+                            <span class="text-gray-500">No actions</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No adoption requests yet.</p>
+    {% endif %}
+
+    <a href="{% url 'pets:admin_dashboard' %}"
+       class="inline-block mt-4 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+        Back to Dashboard
+    </a>
+</div>
+{% endblock %}
+<h2>Adoption Requests</h2>
+
+<table class="table">
+    <tr>
+        <th>User</th>
+        <th>Animal</th>
+        <th>Message</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for r in requests %}
+    <tr>
+        <td>{{ r.user.username }}</td>
+        <td>{{ r.animal.name }}</td>
+        <td>{{ r.message|truncatechars:40 }}</td>
+        <td>{{ r.get_status_display }}</td>
+        <td>
+            {% if r.status != "approved" %}
+                <a href="{% url 'pets:admin_request_approve' r.pk %}" class="btn btn-success btn-sm">Approve</a>
+            {% endif %}
+
+            {% if r.status != "rejected" %}
+                <a href="{% url 'pets:admin_request_reject' r.pk %}" class="btn btn-danger btn-sm">Reject</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+
+<div class="bg-white shadow-lg rounded-xl p-6">
+    <h2 class="text-2xl font-bold mb-4">Adoption Requests</h2>
+
+    {% if adoption_requests %}
+        <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 border">Animal</th>
+                    <th class="px-4 py-2 border">User</th>
+                    <th class="px-4 py-2 border">Status</th>
+                    <th class="px-4 py-2 border">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in adoption_requests %}
+                <tr class="text-center hover:bg-gray-50 transition">
+                    <td class="px-4 py-2 border">{{ request.animal.name }}</td>
+                    <td class="px-4 py-2 border">{{ request.user.username }}</td>
+                    <td class="px-4 py-2 border font-semibold">
+                        {% if request.status == 'approved' %}
+                            <span class="text-green-600">{{ request.status }}</span>
+                        {% elif request.status == 'rejected' %}
+                            <span class="text-red-600">{{ request.status }}</span>
+                        {% else %}
+                            <span class="text-yellow-600">{{ request.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2 border space-x-2">
+                        {% if request.status == 'pending' %}
+                            <a href="{% url 'pets:admin_request_approve' request.id %}" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg shadow-sm text-sm">
+                                Approve
+                            </a>
+                            <a href="{% url 'pets:admin_request_reject' request.id %}" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow-sm text-sm">
+                                Reject
+                            </a>
+                        {% else %}
+                            <span class="text-gray-500">No actions</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No adoption requests yet.</p>
+    {% endif %}
+
+    <a href="{% url 'pets:admin_dashboard' %}"
+       class="inline-block mt-4 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+        Back to Dashboard
+    </a>
+</div>

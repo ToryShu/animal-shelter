@@ -1,0 +1,12 @@
+{% load static %}
+
+{% block content %}
+<h2>Delete Animal: {{ animal.name }}</h2>
+<p>Are you sure you want to delete this animal?</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a href="{% url 'pets:admin_animals' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Add New Animal</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary mt-3">Add Animal</button>
+</form>
+
+<a href="{% url 'pets:admin_dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+{% endblock %}

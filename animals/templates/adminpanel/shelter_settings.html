@@ -1,0 +1,10 @@
+<h1>Shelter Settings</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Save Settings</button>
+</form>
+
+<a href="{% url 'admin_dashboard' %}">Back to admin panel</a>

@@ -48,3 +48,30 @@ def update_animal_and_requests(sender, instance, **kwargs):
         animal.save()
         other_requests = AdoptionRequest.objects.filter(animal=animal).exclude(id=instance.id)
         other_requests.update(status='rejected')
+
+class ShelterSettings(models.Model):
+    name = models.CharField(max_length=200, default="My Animal Shelter")
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    address = models.CharField(max_length=300, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+    class Meta:
+        verbose_name = 'Shelter Settings'
+        verbose_name_plural = 'Shelter Settings'
+    
+    def __str__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+    
+    @classmethod
+    def load(cls):
+        obj, created = cls.objects.get_or_create(pk=1)
+        return obj
+    
