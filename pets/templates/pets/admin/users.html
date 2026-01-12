@@ -1,0 +1,25 @@
+{% block content %}
+<h1 style="text-align:center; margin-bottom:20px;">User List</h1>
+
+<table style="width:80%; margin:0 auto; border-collapse:collapse;">
+    <thead>
+        <tr style="background-color:#f0f0f0;">
+            <th style="padding:10px; border:1px solid #ccc;">ID</th>
+            <th style="padding:10px; border:1px solid #ccc;">Username</th>
+            <th style="padding:10px; border:1px solid #ccc;">Email</th>
+            <th style="padding:10px; border:1px solid #ccc;">Is Staff</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td style="padding:10px; border:1px solid #ccc;">{{ user.id }}</td>
+            <td style="padding:10px; border:1px solid #ccc;">{{ user.username }}</td>
+            <td style="padding:10px; border:1px solid #ccc;">{{ user.email }}</td>
+            <td style="padding:10px; border:1px solid #ccc;">{{ user.is_staff }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

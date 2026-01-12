@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from pets import views as pets_views
 
 app_name = 'pets'
 
@@ -11,8 +12,10 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('register/', views.register, name='register'),
+    path('animal/<int:pk>/', views.animal_detail, name='animal_detail'),
 
     # Admin panel
+    path('admin-panel/', pets_views.admin_dashboard, name='admin_dashboard'),
     path('admin-panel/', views.admin_dashboard, name='admin_dashboard'),
     path('admin-panel/animals/', views.admin_animals, name='admin_animals'),
     path('admin-panel/animals/add/', views.admin_animal_create, name='admin_animal_create'),

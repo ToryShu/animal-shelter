@@ -1,0 +1,12 @@
+.stats a {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 5px;
+    text-decoration: none;
+    color: white;
+    border-radius: 5px;
+}
+.stats .btn-primary { background: #3498db; }
+.stats .btn-success { background: #2ecc71; }
+.stats .btn-warning { background: #f39c12; }
+.stats .btn-info { background: #1abc9c; }

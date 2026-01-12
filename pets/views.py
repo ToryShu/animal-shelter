@@ -14,46 +14,58 @@ from .forms import ShelterSettingsForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from .forms import AnimalForm
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from .models import Animal
+from django.shortcuts import redirect
 
+User = get_user_model()
+
+
+def manage_animals(request):
+    animals = Animal.objects.all()
+    return render(request, "pets/admin/dashboard.html", {
+        "animals": animals
+    })
 
 
 def animal_list(request):
     animal_type = request.GET.get('type')
-    if animal_type in ['cat', 'dog']:
-        animals = Animal.objects.filter(animal_type=animal_type, adopted=False)
+    if animal_type:
+        animals = Animal.objects.filter(species__iexact=animal_type, adopted=False)
     else:
         animals = Animal.objects.filter(adopted=False)
+    return render(request, "pets/public/animal_list.html", {
+    "animals": animals,
+    "selected_type": animal_type
+})
 
-    return render(request, 'pets/animal_list.html', {
-        'animals': animals,
-        'selected_type': animal_type
-    })
 
-
+@login_required
 def animal_detail(request, pk):
     animal = get_object_or_404(Animal, pk=pk)
+    if request.method == "POST":
+        message = request.POST.get("message")
+        AdoptionRequest.objects.create(user=request.user, animal=animal, message=message)
+        return redirect('pets:animal_list')
     return render(request, 'pets/animal_detail.html', {'animal': animal})
+
 
 @login_required
 def adopt_animal(request, pk):
     animal = get_object_or_404(Animal, pk=pk)
-    if animal.adopted:
-        messages.error(request, 'This animal has already been adopted.')
-        return redirect('pets:animal_detail', pk=pk)
-    
-    if request.method == 'POST':
-        form = AdoptionRequestForm(request.POST)
-        if form.is_valid():
-            adoption = form.save(commit=False)
-            adoption.user = request.user
-            adoption.animal = animal
-            adoption.save()
-            messages.success(request, 'Your adoption request has been submitted!')
-            return redirect('pets:animal_detail', pk=pk)
-    else:
-        form = AdoptionRequestForm()
-    
-    return render(request, 'pets/adopt_form.html', {'animal': animal, 'form': form})
+
+    if request.method == "POST":
+        message = request.POST.get("message")
+        AdoptionRequest.objects.create(
+            user=request.user,
+            animal=animal,
+            message=message
+        )
+        return redirect('pets:animal_list')
+    return render(request, 'pets/adopt_form.html', {'animal': animal})
+
+
 
 def user_login(request):
     if request.user.is_authenticated:
@@ -102,13 +114,20 @@ def admin_dashboard(request):
 
 @staff_member_required
 def admin_animals(request):
-    animal_type = request.GET.get('type')
-    if animal_type in ['cat', 'dog']:
-        animals = Animal.objects.filter(animal_type=animal_type)
-    else:
-        animals = Animal.objects.all() 
+    animals = Animal.objects.all()
+    total_animals = animals.count()
+    available_animals = animals.filter(adopted=False).count()
+    adopted_animals = animals.filter(adopted=True).count()
 
-    return render(request, 'pets/admin/animals.html', {'animals': animals, 'selected_type': animal_type})
+    context = {
+        'animals': animals,
+        'total_animals': total_animals,
+        'available_animals': available_animals,
+        'adopted_animals': adopted_animals,
+    }
+
+    return render(request, 'pets/admin/animals.html', context)
+
 
 
 @staff_member_required
@@ -153,7 +172,11 @@ def admin_adoption_requests(request):
 
 
 def admin_users(request):
-    return render(request, 'pets/admin/users.html')
+    users = User.objects.all()
+    return render(request, "pets/admin/users.html", {
+        "users": users
+    })
+
 
 def admin_settings(request):
     return render(request, 'pets/admin/settings.html')
@@ -210,9 +233,9 @@ def request_rejected(request, animal_id):
 def request_success(request, animal_id):
     animal = Animal.objects.get(id=animal_id)
     if animal.species.lower() == 'cat':
-        gif_url_postid = "11748501437476694103"  # счастливый кот
+        gif_url_postid = "11748501437476694103"
     else:
-        gif_url_postid = "24314518"  # счастливый пес
+        gif_url_postid = "24314518"
     return render(request, "pets/admin/request_result.html", {
         "animal": animal,
         "gif_url_postid": gif_url_postid,
@@ -223,9 +246,9 @@ def request_success(request, animal_id):
 def request_rejected(request, animal_id):
     animal = Animal.objects.get(id=animal_id)
     if animal.species.lower() == 'cat':
-        gif_url_postid = "12756433236776117962"  # грустный кот
+        gif_url_postid = "12756433236776117962"
     else:
-        gif_url_postid = "18089551"  # грустный пес
+        gif_url_postid = "18089551" 
     return render(request, "pets/admin/request_result.html", {
         "animal": animal,
         "gif_url_postid": gif_url_postid,
