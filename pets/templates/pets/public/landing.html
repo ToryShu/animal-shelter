@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Animal Shelter</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #f5efe6;
+      overflow: hidden;
+      font-family: system-ui, sans-serif;
+    }
+
+    #intro {
+      position: absolute;
+      inset: 0;
+      background: #f5efe6;
+    }
+
+    #cat {
+      position: absolute;
+      top: -220px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 220px;
+      animation: cat-fall 4s ease-out forwards;
+      z-index: 2;
+    }
+
+    @keyframes cat-fall {
+      0% { top: -220px; }
+      60% { top: 55%; }
+      100% { top: 65%; }
+    }
+
+    #scratches {
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          100deg,
+          rgba(90, 70, 40, 0.15),
+          rgba(90, 70, 40, 0.15) 2px,
+          transparent 2px,
+          transparent 14px
+        );
+      opacity: 0;
+      animation: scratch-appear 4s forwards;
+    }
+
+    @keyframes scratch-appear {
+      30% { opacity: 0; }
+      70% { opacity: 0.25; }
+      100% { opacity: 0.3; }
+    }
+
+    #floor {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 120px;
+      background: #e2d3b5;
+      z-index: 1;
+    }
+
+    #content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 1s ease;
+      z-index: 3;
+    }
+
+    #content.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #3e2f1c;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      max-width: 500px;
+      color: #6b5b45;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .corner-cat {
+    position: fixed;
+    bottom: 20px;
+    right: 0px;
+    width: 160px;
+    z-index: 10;}
+
+  </style>
+</head>
+
+<body>
+
+  <div id="intro">
+    <div id="scratches"></div>
+    <img src="{% static 'images/cat.png' %}" id="cat" alt="Falling cat">
+    <div id="floor"></div>
+  </div>
+
+
+  <img src="{% static 'images/cat2.gif' %}" class="pet-gif" style="position: fixed; bottom: 100px; left: 600px; width: 150px;">
+
+  <div id="content">
+    <h1>Welcome to Animal Shelter</h1>
+    <p>Find your new best friend. Or just look at cute animals. No pressure.</p>
+
+    <div class="buttons">
+      <a href="{% url 'pets:login' %}" class="btn btn-primary btn-lg">Sign In</a>
+      <a href="{% url 'pets:register' %}" class="btn btn-outline-primary btn-lg">Sign Up</a>
+      <a href="{% url 'pets:animal_list' %}" class="btn btn-success btn-lg">See Available Animals</a>
+    </div>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      document.getElementById("content").classList.add("show");
+    }, 4200);
+  </script>
+
+</body>
+</html>

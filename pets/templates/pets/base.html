@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Animal Shelter</title>
+</head>
+<body>
+
+<header style="display: flex; justify-content: space-between; padding: 10px;">
+    <h2>Animal Shelter</h2>
+
+    <nav>
+        {% if user.is_authenticated %}
+            <span>Hello, {{ user.username }}</span>
+            <a href="{% url 'logout' %}">Log out</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Sign up</a>
+        {% endif %}
+    </nav>
+</header>
+
+<hr>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>

@@ -10,3 +10,17 @@
 .stats .btn-success { background: #2ecc71; }
 .stats .btn-warning { background: #f39c12; }
 .stats .btn-info { background: #1abc9c; }
+
+
+.pets-row {
+  display: flex;
+  gap: 24px;
+  margin-top: 40px;
+  justify-content: center;
+}
+
+.pet-gif {
+  width: 120px;
+  height: auto;
+}
+

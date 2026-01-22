@@ -18,8 +18,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from .models import Animal
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
+
 
 
 def manage_animals(request):
@@ -31,24 +33,25 @@ def manage_animals(request):
 
 def animal_list(request):
     animal_type = request.GET.get('type')
-    if animal_type:
-        animals = Animal.objects.filter(species__iexact=animal_type, adopted=False)
+
+    if animal_type == 'cat':
+        animals = Animal.objects.filter(species='cat')
+    elif animal_type == 'dog':
+        animals = Animal.objects.filter(species='dog')
     else:
-        animals = Animal.objects.filter(adopted=False)
-    return render(request, "pets/public/animal_list.html", {
-    "animals": animals,
-    "selected_type": animal_type
-})
+        animals = Animal.objects.all()
+
+    return render(request, 'pets/public/animal_list.html', {
+        'animals': animals,
+        'animal_type': animal_type
+    })
+
 
 
 @login_required
 def animal_detail(request, pk):
     animal = get_object_or_404(Animal, pk=pk)
-    if request.method == "POST":
-        message = request.POST.get("message")
-        AdoptionRequest.objects.create(user=request.user, animal=animal, message=message)
-        return redirect('pets:animal_list')
-    return render(request, 'pets/animal_detail.html', {'animal': animal})
+    return render(request, 'pets/public/animal_detail.html', {'animal': animal})
 
 
 @login_required
@@ -65,12 +68,7 @@ def adopt_animal(request, pk):
         return redirect('pets:animal_list')
     return render(request, 'pets/adopt_form.html', {'animal': animal})
 
-
-
 def user_login(request):
-    if request.user.is_authenticated:
-        return redirect('pets:animal_list')
-    
     if request.method == 'POST':
         form = UserLoginForm(request, data=request.POST)
         if form.is_valid():
@@ -79,16 +77,16 @@ def user_login(request):
             return redirect('pets:animal_list')
     else:
         form = UserLoginForm()
-    return render(request, 'pets/login.html', {'form': form})
+
+    return render(request, 'pets/public/login.html', {'form': form})
+
 
 def user_logout(request):
     logout(request)
     return redirect('pets:animal_list')
 
+
 def register(request):
-    if request.user.is_authenticated:
-        return redirect('pets:animal_list')
-    
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -97,8 +95,9 @@ def register(request):
             return redirect('pets:login')
     else:
         form = UserRegisterForm()
-    
-    return render(request, 'pets/register.html', {'form': form})
+
+    return render(request, 'pets/public/register.html', {'form': form})
+
 
 @admin_required
 def admin_dashboard(request):
@@ -255,3 +254,7 @@ def request_rejected(request, animal_id):
         "gif_url": f"https://tenor.com/view/{gif_url_postid}",
         "status": "rejected"
     })
+
+def landing(request):
+    return render(request, 'pets/public/landing.html')
+

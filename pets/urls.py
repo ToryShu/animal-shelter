@@ -6,16 +6,16 @@ app_name = 'pets'
 
     
 urlpatterns = [
-    path('', views.animal_list, name='animal_list'),
+    path('', views.landing, name='landing'),
+    path('login/', views.user_login, name='login'),
+    path('register/', views.register, name='register'),
+    path('animals/', views.animal_list, name='animal_list'),
     path('animal/<int:pk>/', views.animal_detail, name='animal_detail'),
     path('animal/<int:pk>/adopt/', views.adopt_animal, name='adopt_animal'),
-    path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
-    path('register/', views.register, name='register'),
-    path('animal/<int:pk>/', views.animal_detail, name='animal_detail'),
+    path('dashboard/', views.admin_dashboard, name='admin_dashboard'),
 
     # Admin panel
-    path('admin-panel/', pets_views.admin_dashboard, name='admin_dashboard'),
     path('admin-panel/', views.admin_dashboard, name='admin_dashboard'),
     path('admin-panel/animals/', views.admin_animals, name='admin_animals'),
     path('admin-panel/animals/add/', views.admin_animal_create, name='admin_animal_create'),
