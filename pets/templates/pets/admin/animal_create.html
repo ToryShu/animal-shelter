@@ -1,11 +1,58 @@
+{% extends "pets/base.html" %}
 {% block content %}
-<h1 class="text-2xl font-bold mb-4">Add New Animal</h1>
+<div class="page-header">
+    <div class="container">
+        <h2>➕ Add New Animal</h2>
+        <p class="mb-0">Enter the details of the new sheltered friend.</p>
+    </div>
+</div>
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary mt-3">Add Animal</button>
-</form>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card card-mature p-5">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        {{ form.as_p }}
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">Add Animal</button>
+                        <a href="{% url 'pets:admin_animals' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-<a href="{% url 'pets:admin_dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+<style>
+    input,
+    textarea,
+    select {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        margin-bottom: 1rem;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+        border-color: #2d5a27;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(45, 90, 39, 0.25);
+    }
+
+    label {
+        font-weight: 500;
+        margin-bottom: 0.3rem;
+        color: var(--text-dark);
+    }
+</style>
 {% endblock %}

@@ -1,24 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Animal, AdoptionRequest, User
-from .forms import AdoptionRequestForm
-from django.contrib.auth import login, authenticate, logout
-from .forms import UserLoginForm
-from .forms import UserRegisterForm
-from .decorators import admin_required
-from .models import ShelterSettings
-from pets.models import AdoptionRequest
-from pets.decorators import admin_required
-from .forms import ShelterSettingsForm
+from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib import messages
-from .forms import AnimalForm
-from django.contrib.auth.models import User
-from django.contrib.auth import get_user_model
-from .models import Animal
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
+from .models import Animal, AdoptionRequest, ShelterSettings
+from .forms import AdoptionRequestForm, UserLoginForm, UserRegisterForm, ShelterSettingsForm, AnimalForm
+from .decorators import admin_required
 
 User = get_user_model()
 
@@ -166,24 +153,13 @@ def admin_animal_delete(request, animal_id):
 
 @admin_required
 def admin_adoption_requests(request):
-    adoption_requests = AdoptionRequest.objects.all()
+    adoption_requests = AdoptionRequest.objects.select_related("animal", "user").order_by("-created_at")
     return render(request, 'pets/admin/requests.html', {'adoption_requests': adoption_requests})
 
-
+@admin_required
 def admin_users(request):
     users = User.objects.all()
-    return render(request, "pets/admin/users.html", {
-        "users": users
-    })
-
-
-def admin_settings(request):
-    return render(request, 'pets/admin/settings.html')
-
-@admin_required
-def admin_requests_list(request):
-    requests_list = AdoptionRequest.objects.select_related("animal", "user").order_by("-created_at")
-    return render(request, "pets/admin/requests_list.html", {"requests": requests_list})
+    return render(request, "pets/admin/users.html", {"users": users})
 
 
 @admin_required
@@ -195,14 +171,12 @@ def admin_request_approve(request, pk):
     adoption_request.animal.save()
     return redirect("pets:request_success", animal_id=adoption_request.animal.id)
 
-
 @admin_required
 def admin_request_reject(request, pk):
     adoption_request = get_object_or_404(AdoptionRequest, pk=pk) 
     adoption_request.status = 'rejected'
     adoption_request.save()
     return redirect("pets:request_rejected", animal_id=adoption_request.animal.id)
-
 
 @staff_member_required
 def admin_settings(request):
@@ -214,47 +188,36 @@ def admin_settings(request):
         form = ShelterSettingsForm(request.POST, instance=settings)
         if form.is_valid():
             form.save()
-            messages.success(request, "Shelter settings have been updated!")
-            return redirect('pets:animal_list')
+            messages.success(request, "Shelter settings updated!")
+            return redirect('pets:admin_dashboard')
     else:
         form = ShelterSettingsForm(instance=settings)
 
     return render(request, 'pets/admin/settings.html', {'form': form})
 
 def request_success(request, animal_id):
-    animal = get_object_or_404(Animal, id=animal_id)
-    return render(request, "pets/admin/success.html", {"animal": animal})
-
-def request_rejected(request, animal_id):
-    animal = get_object_or_404(Animal, id=animal_id)
-    return render(request, "pets/admin/rejected.html", {"animal": animal})
-
-def request_success(request, animal_id):
     animal = Animal.objects.get(id=animal_id)
-    if animal.species.lower() == 'cat':
-        gif_url_postid = "11748501437476694103"
-    else:
-        gif_url_postid = "24314518"
+    gif_url_postid = "11748501437476694103" if animal.species.lower() == 'cat' else "24314518"
     return render(request, "pets/admin/request_result.html", {
         "animal": animal,
-        "gif_url_postid": gif_url_postid,
         "gif_url": f"https://tenor.com/view/{gif_url_postid}",
         "status": "approved"
     })
 
 def request_rejected(request, animal_id):
     animal = Animal.objects.get(id=animal_id)
-    if animal.species.lower() == 'cat':
-        gif_url_postid = "12756433236776117962"
-    else:
-        gif_url_postid = "18089551" 
+    gif_url_postid = "12756433236776117962" if animal.species.lower() == 'cat' else "18089551" 
     return render(request, "pets/admin/request_result.html", {
         "animal": animal,
-        "gif_url_postid": gif_url_postid,
         "gif_url": f"https://tenor.com/view/{gif_url_postid}",
         "status": "rejected"
     })
 
 def landing(request):
     return render(request, 'pets/public/landing.html')
+
+@login_required
+def my_adoption_requests(request):
+    adoption_requests = AdoptionRequest.objects.filter(user=request.user).select_related("animal").order_by("-created_at")
+    return render(request, 'pets/public/my_requests.html', {'adoption_requests': adoption_requests})
 

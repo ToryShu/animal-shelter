@@ -1,0 +1,160 @@
+:root {
+    --text-color: #ffffff;
+    --accent-color: #042c0734;
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --primary-gradient: linear-gradient(135deg, #074f1355, #023c0553);
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    background-image: url("../images/landing_bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%);
+    z-index: 1;
+}
+
+.glass-card {
+    position: relative;
+    background: var(--glass-bg);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border);
+    border-radius: 64% 36% 52% 48% / 36% 52% 48% 64%;
+    padding: 5rem 4rem;
+    text-align: center;
+    max-width: 700px;
+    width: 90%;
+    z-index: 2;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+    animation:
+        slideInDrop 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
+        morphing 10s ease-in-out infinite alternate;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes slideInDrop {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes morphing {
+    0% {
+        border-radius: 64% 36% 52% 48% / 36% 52% 48% 64%;
+    }
+
+    33% {
+        border-radius: 36% 64% 48% 52% / 52% 48% 64% 36%;
+    }
+
+    66% {
+        border-radius: 52% 48% 64% 36% / 64% 36% 52% 48%;
+    }
+
+    100% {
+        border-radius: 48% 52% 36% 64% / 48% 64% 36% 52%;
+    }
+}
+
+h1 {
+    font-weight: 700;
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    margin-bottom: 1.5rem;
+    letter-spacing: -1px;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    line-height: 1.1;
+}
+
+p {
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    font-weight: 300;
+    margin-bottom: 3.5rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 500px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+.btn-custom {
+    padding: 1.2rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: none;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-primary-custom {
+    background: var(--primary-gradient);
+    color: #fff;
+    border: none;
+    box-shadow: 0 10px 20px rgba(10, 64, 4, 0.252);
+}
+
+.btn-primary-custom:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(3, 108, 21, 0.169);
+    color: #fff;
+}
+
+.btn-outline-custom {
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+.btn-outline-custom:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #fff;
+    color: white;
+    transform: translateY(-5px) scale(1.02);
+}
+
+@media (min-width: 768px) {
+    .buttons {
+        flex-direction: row;
+        justify-content: center;
+        max-width: none;
+    }
+
+    .btn-custom {
+        min-width: 220px;
+    }
+}

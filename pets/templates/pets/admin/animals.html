@@ -1,101 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Animals</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f5f5f5; }
-        .header { background: #2c3e50; color: white; padding: 20px; }
-        .header h1 { font-size: 24px; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .btn { display: inline-block; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin: 5px; }
-        .btn-primary { background: #3498db; color: white; }
-        .btn-success { background: #27ae60; color: white; }
-        .btn-danger { background: #e74c3c; color: white; }
-        .btn-secondary { background: #95a5a6; color: white; }
-        .btn:hover { opacity: 0.9; }
-        .messages { margin: 20px 0; }
-        .alert { padding: 15px; border-radius: 5px; margin-bottom: 10px; }
-        .alert-success { background: #d4edda; color: #155724; }
-        .alert-error { background: #f8d7da; color: #721c24; }
-        table { width: 100%; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #34495e; color: white; }
-        tr:hover { background: #f8f9fa; }
-        img { max-width: 50px; border-radius: 5px; }
-        .badge { padding: 5px 10px; border-radius: 3px; font-size: 12px; }
-        .badge-success { background: #27ae60; color: white; }
-        .badge-warning { background: #f39c12; color: white; }
-    </style>
-</head>
+{% extends "pets/base.html" %}
+{% load static %}
 
-<body>
-    <div class="header">
-        <div class="container">
-            <h1>🐾 Manage Animals</h1>
-        </div>
-    </div>
-    
+{% block title %}Manage Animals — Animal Shelter{% endblock %}
+
+{% block content %}
+<div class="page-header">
     <div class="container">
-        {% if messages %}
-        <div class="messages">
+        <h2>📝 Manage Animals</h2>
+        <p class="mb-0">Keep the shelter catalog up to date.</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    {% if messages %}
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-10">
             {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-4 shadow-sm" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             {% endfor %}
         </div>
-        {% endif %}
-        
-        <div style="margin: 20px 0;">
-            <a href="{% url 'pets:admin_animal_create' %}" class="btn btn-success">➕ Add New Animal</a>
-            <a href="{% url 'pets:admin_dashboard' %}" class="btn btn-secondary">⬅️ Back to Dashboard</a>
-        </div>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>Photo</th>
-                    <th>Name</th>
-                    <th>Species</th>
-                    <th>Age</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for animal in animals %}
-                <tr>
-                    <td>
-                        {% if animal.photo %}
-                        <img src="{{ animal.photo.url }}" alt="{{ animal.name }}">
-                        {% else %}
-                        No photo
-                        {% endif %}
-                    </td>
-                    <td>{{ animal.name }}</td>
-                    <td>{{ animal.get_species_display }}</td>
-                    <td>{{ animal.age|default:"Unknown" }}</td>
-                    <td>
-                        {% if animal.adopted %}
-                        <span class="badge badge-success">Adopted</span>
-                        {% else %}
-                        <span class="badge badge-warning">Available</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url 'pets:admin_animal_edit' animal.pk %}" class="btn btn-primary">✏️ Edit</a>
-                        <a href="{% url 'pets:admin_animal_delete' animal.pk %}" class="btn btn-danger">🗑️ Delete</a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" style="text-align: center; padding: 40px;">No animals yet. Add your first animal!</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
-</body>
-</html>
+    {% endif %}
 
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-10 d-flex justify-content-between align-items-center">
+            <a href="{% url 'pets:admin_animal_create' %}" class="btn btn-primary d-flex align-items-center">
+                <span class="fs-5 me-2">➕</span> Add New Animal
+            </a>
+            <a href="{% url 'pets:admin_dashboard' %}" class="btn btn-outline-secondary">
+                ⬅️ Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card card-mature shadow-sm border-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Photo</th>
+                                <th>Name</th>
+                                <th>Species</th>
+                                <th>Age</th>
+                                <th>Status</th>
+                                <th class="text-end pe-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for animal in animals %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="rounded-pill overflow-hidden shadow-sm"
+                                        style="width: 45px; height: 45px;">
+                                        {% if animal.photo %}
+                                        <img src="{{ animal.photo.url }}" alt="{{ animal.name }}" class="w-100 h-100"
+                                            style="object-fit: cover;">
+                                        {% else %}
+                                        <div
+                                            class="w-100 h-100 bg-light d-flex align-items-center justify-content-center text-muted small">
+                                            N/A</div>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="fw-bold">{{ animal.name }}</td>
+                                <td>{{ animal.get_species_display }}</td>
+                                <td>{{ animal.age|default:"—" }}</td>
+                                <td>
+                                    {% if animal.adopted %}
+                                    <span
+                                        class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Adopted</span>
+                                    {% else %}
+                                    <span
+                                        class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill">Available</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a href="{% url 'pets:admin_animal_edit' animal.pk %}"
+                                        class="btn btn-sm btn-outline-primary me-2">✏️ Edit</a>
+                                    <a href="{% url 'pets:admin_animal_delete' animal.pk %}"
+                                        class="btn btn-sm btn-outline-danger">🗑️ Delete</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">No animals yet. Add your first
+                                    sheltered friend!</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
