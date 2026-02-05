@@ -13,13 +13,10 @@
                     Adoption {{ status|title }}!
                 </h2>
 
-                <div class="tenor-gif-embed mb-4 mx-auto" data-postid="{{ gif_url_postid }}" data-share-method="host"
-                    data-aspect-ratio="1"
+                <div class="mb-4 mx-auto"
                     style="max-width: 300px; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                    <a href="{{ gif_url }}">GIF</a> from <a
-                        href="https://tenor.com/search/{{ animal.species|lower }}+gif">GIFs</a>
+                    {% include gif_template %}
                 </div>
-                <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 
                 <p class="lead mb-5">
                     {% if status == 'approved' %}

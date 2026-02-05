@@ -30,6 +30,11 @@
               <h2 class="display-5 fw-bold mb-3">{{ animal.name }}</h2>
               <div class="mb-4">
                 <span class="badge bg-primary px-3 py-2 rounded-pill me-2">{{ animal.species|capfirst }}</span>
+                {% if animal.adopted %}
+                <span class="badge bg-success px-3 py-2 rounded-pill me-2">Adopted</span>
+                {% else %}
+                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill me-2">Available</span>
+                {% endif %}
                 <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
                   Age:
                   {% if animal.age == 0 %}
@@ -50,7 +55,7 @@
               {% if not animal.adopted %}
               <div class="adoption-form">
                 <h4 class="mb-4">Interested in adopting {{ animal.name }}?</h4>
-                <form method="POST">
+                <form method="POST" action="{% url 'pets:adopt_animal' animal.pk %}">
                   {% csrf_token %}
                   <div class="mb-3">
                     <label for="message" class="form-label font-weight-bold">Tell us about your home:</label>
@@ -64,10 +69,10 @@
                 </form>
               </div>
               {% else %}
-              <div class="alert alert-info py-4 text-center">
+              <div class="alert alert-shelter-success py-4 text-center">
                 <h4 class="alert-heading fw-bold mb-2">Happily Adopted!</h4>
                 <p class="mb-0">{{ animal.name }} has already found a forever home.</p>
-                <a href="{% url 'pets:animal_list' %}" class="btn btn-outline-info mt-3">Look for other friends</a>
+                <a href="{% url 'pets:animal_list' %}" class="btn btn-outline-primary mt-3">Look for other friends</a>
               </div>
               {% endif %}
               {% else %}

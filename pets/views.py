@@ -52,6 +52,7 @@ def adopt_animal(request, pk):
             animal=animal,
             message=message
         )
+        messages.success(request, f"Your request to adopt {animal.name} has been sent!")
         return redirect('pets:animal_list')
     return render(request, 'pets/adopt_form.html', {'animal': animal})
 
@@ -61,6 +62,9 @@ def user_login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            next_url = request.GET.get('next')
+            if next_url:
+                return redirect(next_url)
             return redirect('pets:animal_list')
     else:
         form = UserLoginForm()
@@ -167,8 +171,9 @@ def admin_request_approve(request, pk):
     adoption_request = get_object_or_404(AdoptionRequest, pk=pk)
     adoption_request.status = 'approved'
     adoption_request.save()
-    adoption_request.animal.status = 'Adopted'
-    adoption_request.animal.save()
+    animal = adoption_request.animal
+    animal.adopted = True
+    animal.save()
     return redirect("pets:request_success", animal_id=adoption_request.animal.id)
 
 @admin_required
@@ -197,19 +202,37 @@ def admin_settings(request):
 
 def request_success(request, animal_id):
     animal = Animal.objects.get(id=animal_id)
-    gif_url_postid = "11748501437476694103" if animal.species.lower() == 'cat' else "24314518"
+    species = animal.species.lower() if animal.species else "cat"
+    gif_template = f"pets/gifs/happy_{species}.html"
+    
+    # Fallback to happy_cat if template doesn't exist
+    from django.template.loader import select_template
+    try:
+        select_template([gif_template])
+    except:
+        gif_template = "pets/gifs/happy_cat.html"
+
     return render(request, "pets/admin/request_result.html", {
         "animal": animal,
-        "gif_url": f"https://tenor.com/view/{gif_url_postid}",
+        "gif_template": gif_template,
         "status": "approved"
     })
 
 def request_rejected(request, animal_id):
     animal = Animal.objects.get(id=animal_id)
-    gif_url_postid = "12756433236776117962" if animal.species.lower() == 'cat' else "18089551" 
+    species = animal.species.lower() if animal.species else "cat"
+    gif_template = f"pets/gifs/sad_{species}.html"
+    
+    # Fallback to sad_cat if template doesn't exist
+    from django.template.loader import select_template
+    try:
+        select_template([gif_template])
+    except:
+        gif_template = "pets/gifs/sad_cat.html"
+
     return render(request, "pets/admin/request_result.html", {
         "animal": animal,
-        "gif_url": f"https://tenor.com/view/{gif_url_postid}",
+        "gif_template": gif_template,
         "status": "rejected"
     })
 

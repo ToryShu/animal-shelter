@@ -1,7 +1,7 @@
 :root {
     --primary-color: #2d5a27;
     --accent-color: #e67e22;
-    --text-dark: #2c3e50;
+    --text-dark: #2d643d;
     --text-light: #7f8c8d;
     --bg-light: #e1d488;
     --white: #efe0a1;
@@ -208,21 +208,18 @@ a:hover {
 
 .animal-photo-container {
     width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 16 / 9;
     overflow: hidden;
-    background-color: #99b651;
+    background-color: #f8f9fa;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
 }
 
 .animal-photo-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 15px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 

@@ -37,8 +37,22 @@
                     </div>
                     <p class="text-muted small mb-3">Requested on {{ request.created_at|date:"M d, Y" }}</p>
                     <div class="bg-light p-3 rounded-3 mb-3">
-                        <p class="card-text text-secondary small mb-0"><strong>Your message:</strong><br>{{
-                            request.message }}</p>
+                        {% if request.status == 'approved' %}
+                        <p class="mb-0 text-success small">
+                            <strong>What's next?</strong> Congratulations! Your request has been approved. Please
+                            contact the shelter to discuss the next steps and details.
+                        </p>
+                        {% elif request.status == 'rejected' %}
+                        <p class="mb-0 text-danger small">
+                            <strong>Status:</strong> Unfortunately, your request has not been approved this time.
+                            Please check out other animals waiting for a home.
+                        </p>
+                        {% else %}
+                        <p class="mb-0 text-muted small italic">
+                            <strong>Status:</strong> Your request is being reviewed. We'll notify you as soon as
+                            there's an update.
+                        </p>
+                        {% endif %}
                     </div>
                     <a href="{% url 'pets:animal_detail' request.animal.pk %}"
                         class="btn btn-outline-primary btn-sm w-100">View Animal Profile</a>
