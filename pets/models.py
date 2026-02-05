@@ -58,13 +58,9 @@ class ShelterSettings(models.Model):
     def __str__(self):
         return self.name
 
-
     class Meta:
         verbose_name = 'Shelter Settings'
         verbose_name_plural = 'Shelter Settings'
-    
-    def __str__(self):
-        return self.name
     
     def save(self, *args, **kwargs):
         self.pk = 1

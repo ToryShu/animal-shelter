@@ -11,11 +11,6 @@ User = get_user_model()
 
 
 
-def manage_animals(request):
-    animals = Animal.objects.all()
-    return render(request, "pets/admin/dashboard.html", {
-        "animals": animals
-    })
 
 
 def animal_list(request):
@@ -54,7 +49,7 @@ def adopt_animal(request, pk):
         )
         messages.success(request, f"Your request to adopt {animal.name} has been sent!")
         return redirect('pets:animal_list')
-    return render(request, 'pets/adopt_form.html', {'animal': animal})
+    return redirect('pets:animal_detail', pk=pk)
 
 def user_login(request):
     if request.method == 'POST':

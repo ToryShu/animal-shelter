@@ -7,7 +7,7 @@ from .models import AdoptionRequest, Animal, ShelterSettings, User
 
 @admin.register(AdoptionRequest)
 class AdoptionRequestAdmin(admin.ModelAdmin):
-    list_display = ('animal', 'user', 'status', 'created_at', 'actions')
+    list_display = ('animal', 'user', 'status', 'created_at', 'actions_buttons')
     list_filter = ('status',)
     search_fields = ('animal__name', 'user__username')
     actions = None
